@@ -2,6 +2,8 @@
 
 
 #include "MPlayerCharacter.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 // Sets default values
 AMPlayerCharacter::AMPlayerCharacter()
@@ -9,6 +11,12 @@ AMPlayerCharacter::AMPlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SpringArmComp = CreateAbstractDefaultSubobject<USpringArmComponent>("SpringArmComp");
+	SpringArmComp->SetupAttachment(RootComponent);
+	SpringArmComp->bUsePawnControlRotation = true;
+
+	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
+	CameraComp->SetupAttachment(SpringArmComp);
 }
 
 // Called when the game starts or when spawned
@@ -37,11 +45,6 @@ void AMPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis("LookRight", this, &AMPlayerCharacter::AddControllerYawInput);
 }
 
-
-void AMPlayerCharacter::MoveForward(float Value)
-{
-	AddMovementInput(GetActorForwardVector() * Value);
-}
 
 void AMPlayerCharacter::MoveRight(float Value)
 {

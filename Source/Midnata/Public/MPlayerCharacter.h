@@ -6,6 +6,10 @@
 #include "GameFramework/Character.h"
 #include "MPlayerCharacter.generated.h"
 
+
+class UCameraComponent;
+class USpringArmComponent;
+
 UCLASS()
 class MIDNATA_API AMPlayerCharacter : public ACharacter
 {
@@ -25,7 +29,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void MoveForward(float Value);
+	void MoveForward(float Value)
+	{
+		AddMovementInput(GetActorForwardVector() * Value);
+	}
 
 	void MoveRight(float Value);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		UCameraComponent* CameraComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		USpringArmComponent* SpringArmComp;
 };
