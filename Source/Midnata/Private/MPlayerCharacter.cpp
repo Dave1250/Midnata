@@ -4,6 +4,7 @@
 #include "MPlayerCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "..\Public\MPlayerCharacter.h"
 
 // Sets default values
 AMPlayerCharacter::AMPlayerCharacter()
@@ -40,7 +41,11 @@ void AMPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMPlayerCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMPlayerCharacter::MoveRight);
-	
+
+	PlayerInputComponent->BindAction("Crouch", EInputEvent::IE_Pressed, this, &AMPlayerCharacter::BeginCrouch);
+	PlayerInputComponent->BindAction("Crouch", EInputEvent::IE_Released, this, &AMPlayerCharacter::EndCrouch);
+	PlayerInputComponent->BindAction("SwitchCrouch", EInputEvent::IE_Pressed, this, &AMPlayerCharacter::SwitchCrouch);
+
 	PlayerInputComponent->BindAxis("LookUp", this, &AMPlayerCharacter::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookRight", this, &AMPlayerCharacter::AddControllerYawInput);
 }
@@ -49,4 +54,26 @@ void AMPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void AMPlayerCharacter::MoveRight(float Value)
 {
 	AddMovementInput(GetActorRightVector() * Value);
+}
+
+void AMPlayerCharacter::BeginCrouch()
+{
+	Crouch();
+}
+
+void AMPlayerCharacter::EndCrouch()
+{
+	UnCrouch();
+}
+
+void AMPlayerCharacter::SwitchCrouch()
+{
+	if (!bIsCrouched)
+	{
+		Crouch();
+	}
+	else
+	{
+		UnCrouch();
+	}
 }
