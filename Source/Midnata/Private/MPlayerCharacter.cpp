@@ -2,6 +2,7 @@
 
 
 #include "MPlayerCharacter.h"
+#include "MWeapon.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -13,7 +14,7 @@ AMPlayerCharacter::AMPlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SpringArmComp = CreateAbstractDefaultSubobject<USpringArmComponent>("SpringArmComp");
+	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
 	SpringArmComp->SetupAttachment(RootComponent);
 	SpringArmComp->bUsePawnControlRotation = true;
 
@@ -21,6 +22,9 @@ AMPlayerCharacter::AMPlayerCharacter()
 	CameraComp->SetupAttachment(SpringArmComp);
 
 	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
+	UE_LOG(LogTemp, Error, TEXT("Lina to chuj"));
+
 
 }
 
@@ -57,6 +61,17 @@ void AMPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis("LookRight", this, &AMPlayerCharacter::AddControllerYawInput);
 }
 
+FVector AMPlayerCharacter::GetPawnViewLocation() const
+{
+	if (CameraComp)
+	{
+		return CameraComp->GetComponentLocation();
+	}
+	else
+	{
+		return Super::GetPawnViewLocation();
+	}
+}
 
 void AMPlayerCharacter::MoveRight(float Value)
 {
