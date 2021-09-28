@@ -31,7 +31,7 @@ protected:
 	USkeletalMeshComponent* SkeletalMeshComp;
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void Attack();
+	virtual void Attack();
 
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	float Range = 10000.f;
